@@ -6,7 +6,6 @@
 
 import React, { Component } from 'react';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   View,
@@ -15,16 +14,13 @@ import {
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default class rn extends Component {
+export default class ArtistBox extends Component {
+  
   render() {
 
-    const image = 'https://static.platzi.com/media/files/bowie_a927fdf3-b321-4a5c-99ca-239cc86c57bc.png';
-    const name = 'David Bowie';
-    const likes = 200;
-    const comments = 140;
+    const { image, name, likes, comments } = this.props.artist;
 
     return (
-      <View style={styles.container}>
         <View style={styles.artistBox}>
             <Image style={styles.image} source={{ uri: image}}/>
             <View style={styles.info}>
@@ -41,19 +37,22 @@ export default class rn extends Component {
                 </View>
             </View>
         </View>
-      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'lightgray'
-  },
   artistBox: {
+      margin: 5,
       backgroundColor: 'white',
-      flexDirection: 'row'
+      flexDirection: 'row',
+      shadowColor: 'black',
+      shadowOpacity: .1,
+      shadowOffset: { // only ios
+          height: 1,
+          width: -2,
+      },
+      elevation: 2 // only android
   },
   image: {
     width: 150,
@@ -84,5 +83,3 @@ const styles = StyleSheet.create({
     color: 'gray'
   }
 });
-
-AppRegistry.registerComponent('rn', () => rn);
