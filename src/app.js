@@ -8,39 +8,26 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  View
+  View,
+  Platform
 } from 'react-native';
 
-import ArtistList from './ArtistList';
-import { getArtists } from './api-client';
+import {Scene, Router} from 'react-native-router-flux';
 
-export default class rn extends Component {
+import HomeView from './HomeView';
+import ArtistDetailView from './ArtistDetailView';
 
-  state = {
-    artists: []
-  }
-
-  componentDidMount() {
-    getArtists()
-      .then( data => this.setState({ artists: data })); 
-  }
-
+class rn extends React.Component {
   render() {
-    const artists = this.state.artists;
+    const isAndroid = Platform.OS === 'android'; 
 
-    return (
-      <View style={styles.container}>
-        <ArtistList artists={artists}/>
-      </View>
-    );
+    return <Router>
+      <Scene key="root">
+        <Scene key="home" component={HomeView} hideNavBar/>
+        <Scene key="artistDetail" component={ArtistDetailView} hideNavBar={isAndroid}/>
+      </Scene>
+    </Router>
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'lightgray'
-  }
-});
 
 AppRegistry.registerComponent('rn', () => rn);
