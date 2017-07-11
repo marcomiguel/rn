@@ -17,18 +17,40 @@ import FBSDK, {
 } from 'react-native-fbsdk';
 
 import { Actions } from 'react-native-router-flux';
+import firebase, { firebaseAuth } from './firebase';
+
+const { FacebookAuthProvider } = firebase.auth;
 
 export default class LoginView extends Component {
+
+  state = {
+    credentials: null
+  }
+
+  componentWillMount() {
+    this.authenticateUser();  
+  }
+
+  authenticateUser = () => {
+    AccessToken.getCurrentAccessToken().then((data) => {
+      const { accessToken } = data;
+      const credential = FacebookAuthProvider.credential(accessToken);
+      firebaseAuth.signInWithCredential(credential).then( (credentials) => {
+        this.setState({ credentials });
+        Actions.root();
+      }, function(error) {
+        console.log("Sign In Error", error);
+      });
+    });
+  }
 
   handleLoginFinish = (error, result) => {
     if (error) {
       console.error(error);
     } else if (result.isCancelled) {
-      alert("login is cancelled.");
+      console.warn("login is cancelled.");
     } else {
-      AccessToken.getCurrentAccessToken().then(
-        Actions.root()
-      )
+      this.authenticateUser(data.accessToken)
     }
   }
 
