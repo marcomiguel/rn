@@ -8,7 +8,8 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
-  Text
+  Text,
+  Image
 } from 'react-native';
 
 import FBSDK, {
@@ -56,13 +57,14 @@ export default class LoginView extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <Image source={require('./background.jpg')} style={styles.container}>
         <Text style={styles.welcome}>Bienvenid@ a rn</Text>
+        <Image source={require('./logo.png')} style={styles.logo}/>
         <LoginButton
           readPermissions={["public_profile", 'email']}
           onLoginFinished={this.handleLoginFinish}
           onLogoutFinished={() => alert("logout.")}/>
-      </View>
+      </Image>
     );
   }
 }
@@ -70,14 +72,23 @@ export default class LoginView extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: null,
+    height: null,
     backgroundColor: 'lightgray',
     justifyContent: 'center',
     alignItems: 'center'
   },
+  logo: {
+    width: 120,
+    height: 120,
+    marginBottom: 15
+  },
   welcome: {
       fontSize: 24,
       fontWeight: '600',
-      marginBottom: 20
+      marginBottom: 20,
+      backgroundColor: 'transparent',
+      color: 'white'
   }
 });
 
