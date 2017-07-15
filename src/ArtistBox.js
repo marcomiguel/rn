@@ -20,7 +20,8 @@ export default class ArtistBox extends Component {
   
   state = {
     liked: false,
-    likeCount: 0
+    likeCount: 0,
+    commentsCount: 0
   }
 
   componentWillMount() {
@@ -29,11 +30,17 @@ export default class ArtistBox extends Component {
       const artist = snapshot.val();
       if(artist){
         this.setState({ 
-          likeCount: artist.likeCount, 
-          liked: artist.likes && artist.likes[uid] 
+          likeCount: artist.likeCount,
+          liked: artist.likes && artist.likes[uid],
+          commentsCount: 0
         });
       }
     })
+    this.getCommentsRef().on('value', snapshot => {
+      const numComments = snapshot.numChildren();
+      console.warn('num', numComments);
+      this.setState({commentsCount: numComments});
+    });
   }
 
   handlePress = () => {
@@ -43,6 +50,11 @@ export default class ArtistBox extends Component {
   getArtistRef = () => {
     const { id } = this.props.artist;
     return firebaseDatabase.ref(`artist/${id}`);
+  }
+
+  getCommentsRef = () => {
+    const { id } = this.props.artist;
+    return firebaseDatabase.ref(`comments/${id}`);
   }
 
   toggleLike = (liked) => {
@@ -76,7 +88,7 @@ export default class ArtistBox extends Component {
     const likeIcon = this.state.liked ?
       <Icon name="ios-heart" size={30} color="#e74c3c" /> :
       <Icon name="ios-heart-outline" size={30} color="gray" />
-    const { likeCount } = this.state; 
+    const { likeCount, commentsCount } = this.state; 
 
     return (
         <View style={styles.artistBox}>
@@ -92,7 +104,7 @@ export default class ArtistBox extends Component {
                     </View>
                     <View style={styles.iconContainer}>
                         <Icon name="ios-chatboxes-outline" size={30} color="gray" />
-                        <Text style={styles.count}>{comments}</Text>
+                        <Text style={styles.count}>{commentsCount}</Text>
                     </View>    
                 </View>
             </View>
